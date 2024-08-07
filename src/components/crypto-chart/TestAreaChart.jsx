@@ -30,6 +30,11 @@ const PriceChip = styled(Chip)(({ theme }) => ({
   color: "white",
   borderRadius: 3,
 }));
+const CurrentPriceChip = styled(Chip)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: "white",
+  borderRadius: 3,
+}));
 
 const formattedData = rawData.map(([timestamp, price, volume]) => ({
   timestamp: new Date(timestamp).toLocaleDateString(),
@@ -37,11 +42,42 @@ const formattedData = rawData.map(([timestamp, price, volume]) => ({
   volume,
 }));
 
+const renderCustomLabel = (props) => {
+  const { xAxisMap, yAxisMap, data } = props;
+  const lastDataPoint = data[data.length - 1];
+  const xCoord = yAxisMap.right.x;
+
+  const yCoord = yAxisMap.right.scale(lastDataPoint.price);
+
+  console.log(xCoord, yCoord);
+  return (
+    <foreignObject
+      x={xCoord - 30}
+      y={yCoord - 20}
+      width={120}
+      height={50}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <CurrentPriceChip label={`${lastDataPoint.price}`} />
+      </div>
+    </foreignObject>
+  );
+};
+
 const TestAreaChart = ({ data = formattedData }) => {
   const theme = useTheme();
   const [tooltipHeight, setTooltipHeight] = useState(0);
   const [chartSize, setChartSize] = useState({ x: 0, y: 0 });
   const tooltipRef = useRef(null);
+  const [showCurrentPrice, setShowCurrentPrice] = useState(false);
 
   useEffect(() => {
     const container = document.querySelector(".recharts-responsive-container");
@@ -192,10 +228,9 @@ const TestAreaChart = ({ data = formattedData }) => {
           dot={false}
           activeDot={false}
           yAxisId={"right"}
+          onAnimationEnd={() => setShowCurrentPrice(true)}
         />
-        <Customized
-          component={(props) => console.log("custom component:", props)}
-        />
+        {showCurrentPrice && <Customized component={renderCustomLabel} />}
       </ComposedChart>
     </ResponsiveContainer>
   );
