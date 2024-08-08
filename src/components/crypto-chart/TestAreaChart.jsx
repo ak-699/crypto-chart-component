@@ -229,8 +229,9 @@ const TestAreaChart = ({ data = formattedData }) => {
             axisLine={false}
             tick={false}
             // hide={true}
-            width={100}
+            width={80}
           />
+
           <Tooltip
             position={{ x: chartSize.y - 150 }}
             isAnimationActive={false}
