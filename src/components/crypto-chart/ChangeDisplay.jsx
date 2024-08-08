@@ -1,14 +1,14 @@
-import { Typography } from "@mui/material";
 import React from "react";
+import { Typography } from "@mui/material";
 
 const ChangeDisplay = ({ changeAmount, changePercent }) => {
   return (
     <>
       <Typography
         sx={{
-          fontSize: "1.2rem",
+          fontSize: "1.4rem",
           fontWeight: 400,
-          lineHeight: "1.5rem",
+          lineHeight: "2.27rem",
           color: "#67BF6B",
           my: 1,
         }}

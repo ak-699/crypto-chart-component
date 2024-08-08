@@ -1,7 +1,9 @@
-import { Typography } from "@mui/material";
 import React from "react";
+import { Typography } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 const PriceDisplay = ({ children }) => {
+  const theme = useTheme();
   return (
     <>
       <Typography
@@ -9,7 +11,7 @@ const PriceDisplay = ({ children }) => {
           fontFamily: "Circular Std",
           fontSize: "4.5rem",
           fontWeight: "400",
-          lineHeight: "5.5rem",
+          // lineHeight: "5.5rem",
           textAlign: "left",
           "&::after": {
             content: "'USD'",

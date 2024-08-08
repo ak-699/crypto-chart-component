@@ -16,6 +16,8 @@ import PriceDisplay from "./PriceDisplay.jsx";
 import ChangeDisplay from "./ChangeDisplay.jsx";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import CustomTabPanel from "./CustomTabPanel.jsx";
+import { useTheme } from "@emotion/react";
 
 const toggleOptions = [
   "summary",
@@ -25,31 +27,11 @@ const toggleOptions = [
   "Settings",
 ];
 
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-      sx={{
-        "& .css-19kzrtu": {
-          padding: 0,
-        },
-      }}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </Box>
-  );
-}
-
 const CryptoChart = () => {
   const [value, setValue] = useState(toggleOptions[1]);
   const [alignment, setAlignment] = useState("1d");
   const [data, setData] = useState([]);
+  const theme = useTheme();
 
   const options = {
     headers: {
@@ -83,13 +65,13 @@ const CryptoChart = () => {
   return (
     <>
       <Typography
-        variant="h1"
+        variant="h3"
         textAlign={"center"}
       >
         Catalog Assesment
       </Typography>
 
-      <Card sx={{ p: 10, m: 5 }}>
+      <Card sx={{ p: 1 }}>
         <Stack>
           <PriceDisplay>63,179.71</PriceDisplay>
           <ChangeDisplay
@@ -101,11 +83,24 @@ const CryptoChart = () => {
               value={value}
               onChange={handleChange}
               sx={{
-                my: 2,
+                fontSize: "2rem",
                 "& .MuiTab-root": {
                   textAlign: "left",
                   justifyContent: "flex-start",
                   px: 0,
+                  // border: 2,
+                },
+                minHeight: 0,
+                "& .css-13yx5d5-MuiButtonBase-root-MuiTab-root": {
+                  minHeight: 0,
+                  minWidth: 0,
+                  mr: 1,
+                  pr: 1,
+                  fontSize: "1.4rem",
+                  textTransform: "capitalize",
+                  // [theme.breakpoints.down("md")]: {
+                  //   fontSize: "1rem",
+                  // },
                 },
               }}
             >
@@ -120,53 +115,65 @@ const CryptoChart = () => {
             </Tabs>
           </Box>
 
-          <CustomTabPanel
-            value={value}
-            index="chart"
-          >
-            <Box>
-              <Box sx={{ display: "flex", flexWrap: "wrap", mt: 5, mb: 2 }}>
-                <Box sx={{ mr: 10 }}>
-                  <Button startIcon={<OpenInFullIcon />}>fullscreen</Button>
-                  <Button startIcon={<ControlPointIcon />}>Compare</Button>
-                </Box>
-                <Box />
-                <ToggleButtonGroup
-                  value={alignment}
-                  exclusive
-                  onChange={handleAlignment}
-                  sx={{
-                    "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root": {
-                      border: "none",
-                      borderRadius: "0.25rem",
-                      color: "#6F7177",
-                      textTransform: "lowercase",
-                      width: "2.8rem",
-                      height: "2rem",
-                      mr: 1,
-                    },
-                    "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root.Mui-selected":
-                      {
-                        bgcolor: "#4B40EE",
-                        color: "#FFFFFF",
-                        "&:hover": {
-                          bgcolor: "#4B40EE",
-                        },
-                      },
-                  }}
-                >
-                  <ToggleButton value="1d">1d</ToggleButton>
-                  <ToggleButton value="3d">3d</ToggleButton>
-                  <ToggleButton value="1w">1w</ToggleButton>
-                  <ToggleButton value="1m">1m</ToggleButton>
-                  <ToggleButton value="6m">6m</ToggleButton>
-                  <ToggleButton value="1y">1y</ToggleButton>
-                  <ToggleButton value="max">max</ToggleButton>
-                </ToggleButtonGroup>
+          <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                my: 2,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box
+                sx={{
+                  "& .MuiButtonBase-root": {
+                    fontSize: "1.4rem",
+                    textTransform: "capitalize",
+                    mb: 1,
+                    color: "#6F7177",
+                  },
+                }}
+              >
+                <Button startIcon={<OpenInFullIcon />}>fullscreen</Button>
+                <Button startIcon={<ControlPointIcon />}>Compare</Button>
               </Box>
-              <TestAreaChart />
+              <Box />
+              <ToggleButtonGroup
+                value={alignment}
+                exclusive
+                onChange={handleAlignment}
+                sx={{
+                  "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root": {
+                    border: "none",
+                    borderRadius: "0.25rem",
+                    color: "#6F7177",
+                    textTransform: "lowercase",
+                    fontSize: "1.4rem",
+                    height: "3.5rem",
+                    width: "4rem",
+                  },
+                  "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root.Mui-selected":
+                    {
+                      bgcolor: "#4B40EE",
+                      color: "#FFFFFF",
+                      "&:hover": {
+                        bgcolor: "#4B40EE",
+                      },
+                    },
+                }}
+              >
+                <ToggleButton value="1d">1d</ToggleButton>
+                <ToggleButton value="3d">3d</ToggleButton>
+                <ToggleButton value="1w">1w</ToggleButton>
+                <ToggleButton value="1m">1m</ToggleButton>
+                <ToggleButton value="6m">6m</ToggleButton>
+                <ToggleButton value="1y">1y</ToggleButton>
+                <ToggleButton value="max">max</ToggleButton>
+              </ToggleButtonGroup>
             </Box>
-          </CustomTabPanel>
+            <TestAreaChart />
+          </Box>
         </Stack>
       </Card>
     </>

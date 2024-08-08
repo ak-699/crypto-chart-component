@@ -1,5 +1,5 @@
-import { Chip, styled, useTheme } from "@mui/material";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Box, Chip, styled, useTheme } from "@mui/material";
 import {
   Area,
   Bar,
@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import ChartGradient from "./ChartGradient";
 
 const rawData = [
   [1722844845637, 52675.1281, 1375],
@@ -29,11 +30,13 @@ const PriceChip = styled(Chip)(({ theme }) => ({
   backgroundColor: "black",
   color: "white",
   borderRadius: 3,
+  fontSize: "1.4rem",
 }));
 const CurrentPriceChip = styled(Chip)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: "white",
   borderRadius: 3,
+  fontSize: "1.4rem",
 }));
 
 const formattedData = rawData.map(([timestamp, price, volume]) => ({
@@ -45,31 +48,61 @@ const formattedData = rawData.map(([timestamp, price, volume]) => ({
 const renderCustomLabel = (props) => {
   const { xAxisMap, yAxisMap, data } = props;
   const lastDataPoint = data[data.length - 1];
-  const xCoord = yAxisMap.right.x;
-
+  const xCoord = props.xAxisMap[0].width;
+  // console.log(props);
   const yCoord = yAxisMap.right.scale(lastDataPoint.price);
 
-  console.log(xCoord, yCoord);
+  // console.log(xCoord, yCoord);
   return (
     <foreignObject
-      x={xCoord - 30}
-      y={yCoord - 20}
-      width={120}
+      x={xCoord - 10}
+      y={yCoord - 25}
+      width={100}
       height={50}
     >
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
           width: "100%",
           height: "100%",
         }}
       >
-        <CurrentPriceChip label={`${lastDataPoint.price}`} />
+        <CurrentPriceChip label={`${lastDataPoint.price.toFixed(2)}`} />
       </div>
     </foreignObject>
   );
+};
+
+const CustomBox = (props) => {
+  const chartY = props.chartY;
+  const chartX = props.chartX;
+  const widthX = props.xAxisMap[0].width;
+  let price = props.yAxisMap.right.scale.invert(chartY);
+  // console.log(price);
+  // console.log(props);
+  if (props.isTooltipActive) {
+    return (
+      <foreignObject
+        x={widthX - 10}
+        y={chartY - 16}
+        width={100}
+        height="50"
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <PriceChip label={price.toFixed(2)} />
+        </div>
+      </foreignObject>
+    );
+  }
+  return null;
 };
 
 const TestAreaChart = ({ data = formattedData }) => {
@@ -135,104 +168,112 @@ const TestAreaChart = ({ data = formattedData }) => {
   }, [rawData]);
 
   return (
-    <ResponsiveContainer
-      width={"100%"}
-      height={400}
-      onResize={handleResize}
-    >
-      <ComposedChart
-        data={enhancedData}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-        onMouseMove={handleMouseMove}
-        onMouseOut={handleMouseOut}
+    <Box sx={{ overflow: "visible", position: "relative" }}>
+      <ResponsiveContainer
+        width={"100%"}
+        height={343}
+        onResize={handleResize}
       >
-        <defs>
-          <linearGradient
-            id="colorUv"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="5%"
-              stopColor={theme.palette.primary.main}
-              stopOpacity={0.1}
-            />
-            <stop
-              offset="95%"
-              stopColor={theme.palette.primary.main}
-              stopOpacity={0}
-            />
-          </linearGradient>
-          <linearGradient
-            id="colorPv"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="5%"
-              stopColor={theme.palette.primary.main}
-              stopOpacity={0.4}
-            />
-            <stop
-              offset="95%"
-              stopColor={theme.palette.primary.main}
-              stopOpacity={0}
-            />
-          </linearGradient>
-        </defs>
-
-        <YAxis
-          orientation="right"
-          yAxisId={"right"}
-          type="number"
-          domain={[min, max]}
-          padding={{ top: 20, bottom: 20 }}
-          axisLine={false}
-          tick={false}
-          hide={true}
-        />
-        <Tooltip
-          position={{ x: chartSize.y - 45 }}
-          isAnimationActive={false}
-          offset={-16}
-          content={
-            <PriceChip
-              ref={tooltipRef}
-              label="62387"
-            />
-          }
-          cursor={
-            cursorPosRef.current && (
-              <Cross
-                x={cursorPosRef.current.x}
-                y={cursorPosRef.current.y}
-                stroke="black"
-                strokeWidth={0.5}
-                strokeDasharray={"4 4"}
+        <ComposedChart
+          data={enhancedData}
+          margin={0}
+          width={"100%"}
+          onMouseMove={handleMouseMove}
+          onMouseOut={handleMouseOut}
+        >
+          <defs>
+            <linearGradient
+              id="colorUv"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="5%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={0.1}
               />
-            )
-          }
-        />
-        <CartesianGrid />
-        <Area
-          type="monotone"
-          dataKey="price"
-          stroke={theme.palette.primary.main}
-          strokeWidth={2}
-          fillOpacity={0.5}
-          fill="url(#colorPv)"
-          dot={false}
-          activeDot={false}
-          yAxisId={"right"}
-          onAnimationEnd={() => setShowCurrentPrice(true)}
-        />
-        {showCurrentPrice && <Customized component={renderCustomLabel} />}
-      </ComposedChart>
-    </ResponsiveContainer>
+              <stop
+                offset="95%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={0}
+              />
+            </linearGradient>
+            <linearGradient
+              id="colorPv"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="5%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={0.4}
+              />
+              <stop
+                offset="95%"
+                stopColor={theme.palette.primary.main}
+                stopOpacity={0}
+              />
+            </linearGradient>
+          </defs>
+
+          <YAxis
+            orientation="right"
+            yAxisId={"right"}
+            type="number"
+            domain={[min, max]}
+            padding={{ top: 40, bottom: 40 }}
+            axisLine={false}
+            tick={false}
+            // hide={true}
+            width={100}
+          />
+          <Tooltip
+            position={{ x: chartSize.y - 150 }}
+            isAnimationActive={false}
+            offset={-16}
+            content={(props) => {
+              // console.log(props);
+            }}
+            cursor={
+              cursorPosRef.current && (
+                <Cross
+                  x={cursorPosRef.current.x}
+                  y={cursorPosRef.current.y}
+                  stroke="black"
+                  strokeWidth={0.5}
+                  strokeDasharray={"4 4"}
+                />
+              )
+            }
+          />
+          {/* cartesian grid */}
+          <CartesianGrid />
+
+          {/* Area plot */}
+          <Area
+            type="monotone"
+            dataKey="price"
+            stroke={theme.palette.primary.main}
+            strokeWidth={2}
+            fillOpacity={0.5}
+            fill="url(#colorPv)"
+            dot={false}
+            activeDot={false}
+            yAxisId={"right"}
+            onAnimationEnd={() => setShowCurrentPrice(true)}
+            style={{ overflow: "visible", border: "2px solid red" }}
+          />
+          {/* Custom current price chip */}
+          {showCurrentPrice && <Customized component={renderCustomLabel} />}
+          {/* custom tooltip */}
+          <Customized component={CustomBox} />
+        </ComposedChart>
+      </ResponsiveContainer>
+    </Box>
   );
 };
 
