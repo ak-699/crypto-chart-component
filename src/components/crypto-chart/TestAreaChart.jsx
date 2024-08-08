@@ -39,10 +39,12 @@ const CurrentPriceChip = styled(Chip)(({ theme }) => ({
   fontSize: "1.4rem",
 }));
 
+const scaleFactor = 20 / 2000;
+
 const formattedData = rawData.map(([timestamp, price, volume]) => ({
   timestamp: new Date(timestamp).toLocaleDateString(),
   price,
-  volume,
+  volume: volume * scaleFactor,
 }));
 
 const renderCustomLabel = (props) => {
@@ -231,6 +233,20 @@ const TestAreaChart = ({ data = formattedData }) => {
             // hide={true}
             width={80}
           />
+          {/* <YAxis
+            yAxisId="left"
+            orientation="left"
+            axisLine={false}
+            hide={true}
+            width={0}
+            domain={[0, 200]}
+          />
+          <Bar
+            yAxisId="left"
+            dataKey="volume"
+            barSize={5}
+            fill="#E6E8EB"
+          /> */}
 
           <Tooltip
             position={{ x: chartSize.y - 150 }}
