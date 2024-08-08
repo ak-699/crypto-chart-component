@@ -144,6 +144,7 @@ const CryptoChart = () => {
                 exclusive
                 onChange={handleAlignment}
                 sx={{
+                  mr: "80px",
                   "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root": {
                     border: "none",
                     borderRadius: "0.25rem",
