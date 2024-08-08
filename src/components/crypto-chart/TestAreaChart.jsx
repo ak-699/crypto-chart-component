@@ -246,6 +246,7 @@ const TestAreaChart = ({ data = formattedData }) => {
             dataKey="volume"
             barSize={5}
             fill="#E6E8EB"
+            maxBarSize={20}
           /> */}
 
           <Tooltip

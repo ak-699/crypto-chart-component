@@ -91,7 +91,7 @@ const CryptoChart = () => {
                   // border: 2,
                 },
                 minHeight: 0,
-                "& .css-13yx5d5-MuiButtonBase-root-MuiTab-root": {
+                "& .MuiButtonBase-root": {
                   minHeight: 0,
                   minWidth: 0,
                   mr: 1,
@@ -148,7 +148,7 @@ const CryptoChart = () => {
                   onChange={handleAlignment}
                   sx={{
                     mr: "80px",
-                    "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root": {
+                    "& .MuiButtonBase-root": {
                       border: "none",
                       borderRadius: "0.25rem",
                       color: "#6F7177",
@@ -157,14 +157,13 @@ const CryptoChart = () => {
                       height: "3.5rem",
                       width: "4rem",
                     },
-                    "& .css-ueukts-MuiButtonBase-root-MuiToggleButton-root.Mui-selected":
-                      {
+                    "& .MuiButtonBase-root.Mui-selected": {
+                      bgcolor: "#4B40EE",
+                      color: "#FFFFFF",
+                      "&:hover": {
                         bgcolor: "#4B40EE",
-                        color: "#FFFFFF",
-                        "&:hover": {
-                          bgcolor: "#4B40EE",
-                        },
                       },
+                    },
                   }}
                 >
                   <ToggleButton value="1d">1d</ToggleButton>
