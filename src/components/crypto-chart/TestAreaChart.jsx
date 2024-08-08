@@ -252,7 +252,7 @@ const TestAreaChart = ({ data = formattedData }) => {
             }
           />
           {/* cartesian grid */}
-          <CartesianGrid />
+          <CartesianGrid strokeOpacity={0.3} />
 
           {/* Area plot */}
           <Area
